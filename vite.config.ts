@@ -12,4 +12,9 @@ export default defineConfig({
     // nitro/vite builds from this
     server: { entry: "server" },
   },
+  nitro: {
+    // Use the Vercel preset so Nitro outputs a .vercel/output directory that
+    // Vercel's build system can serve directly — no manual routing config needed.
+    preset: "vercel",
+  },
 });
