@@ -26,7 +26,7 @@ function AdminPage() {
     setError(null);
     try {
       if (mode === "signup") {
-        const res = await adminSignupFn({ email, password });
+        const res = await adminSignupFn({ data: { email, password } });
         if (!res.ok) {
           setError(res.reason);
           return;
@@ -39,7 +39,7 @@ function AdminPage() {
         return;
       }
 
-      const res = await adminLoginFn({ email, password });
+      const res = await adminLoginFn({ data: { email, password } });
       if (!res.ok) {
         setError(res.reason);
         return;
