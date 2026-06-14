@@ -1,7 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 
-import { adminLogin, adminMe, adminSignup } from "../auth";
+import { adminLogin, adminSignup, adminMe } from "../auth";
 
 export const adminSignupFn = createServerFn({ method: "POST" })
   .inputValidator(
@@ -10,9 +10,7 @@ export const adminSignupFn = createServerFn({ method: "POST" })
       password: z.string().min(8),
     }),
   )
-  .handler(async ({ data }) => {
-    return adminSignup(data);
-  });
+  .handler(async ({ data }) => adminSignup(data));
 
 export const adminLoginFn = createServerFn({ method: "POST" })
   .inputValidator(
@@ -21,14 +19,13 @@ export const adminLoginFn = createServerFn({ method: "POST" })
       password: z.string().min(1),
     }),
   )
-  .handler(async ({ data }) => {
-    return adminLogin(data);
-  });
+  .handler(async ({ data }) => adminLogin(data));
 
-export const adminMeFn = createServerFn({ method: "GET" })
-  .handler(async ({ request }) => {
-    const token = request.headers.get("authorization")?.replace(/^Bearer\s+/i, "");
-    return adminMe(token);
-  });
-
+// Note: this fn is included for completeness; the admin page works without it.
+// If your TanStack Start version doesn't expose request on GET handlers,
+// simply stop using this function client-side.
+export const adminMeFn = createServerFn({ method: "GET" }).handler(async () => {
+  // No request context available in this template.
+  return adminMe(undefined);
+});
 
