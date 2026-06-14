@@ -1,0 +1,4 @@
+const tsrStartManifest = () => ({ routes: { __root__: { filePath: "/home/sage/Downloads/XTREME-ENERGY-DRINK/src/routes/__root.tsx", children: ["/", "/admin", "/api-admin-me"], preloads: ["/assets/index-DSSxzpaD.js"], scripts: [{ attrs: { type: "module", async: true, src: "/assets/index-DSSxzpaD.js" } }] }, "/": { filePath: "/home/sage/Downloads/XTREME-ENERGY-DRINK/src/routes/index.tsx", children: void 0, preloads: ["/assets/index-C9GEnRoe.js"] }, "/admin": { filePath: "/home/sage/Downloads/XTREME-ENERGY-DRINK/src/routes/admin.tsx", children: void 0, preloads: ["/assets/admin-BfQe776j.js"] }, "/api-admin-me": { filePath: "/home/sage/Downloads/XTREME-ENERGY-DRINK/src/routes/api-admin-me.ts", children: void 0, preloads: ["/assets/api-admin-me-DtqBFgK5.js"] } } });
+export {
+  tsrStartManifest
+};

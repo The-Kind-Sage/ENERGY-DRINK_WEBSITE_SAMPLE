@@ -1,0 +1,47 @@
+var lodash_isplainobject;
+var hasRequiredLodash_isplainobject;
+function requireLodash_isplainobject() {
+  if (hasRequiredLodash_isplainobject) return lodash_isplainobject;
+  hasRequiredLodash_isplainobject = 1;
+  var objectTag = "[object Object]";
+  function isHostObject(value) {
+    var result = false;
+    if (value != null && typeof value.toString != "function") {
+      try {
+        result = !!(value + "");
+      } catch (e) {
+      }
+    }
+    return result;
+  }
+  function overArg(func, transform) {
+    return function(arg) {
+      return func(transform(arg));
+    };
+  }
+  var funcProto = Function.prototype, objectProto = Object.prototype;
+  var funcToString = funcProto.toString;
+  var hasOwnProperty = objectProto.hasOwnProperty;
+  var objectCtorString = funcToString.call(Object);
+  var objectToString = objectProto.toString;
+  var getPrototype = overArg(Object.getPrototypeOf, Object);
+  function isObjectLike(value) {
+    return !!value && typeof value == "object";
+  }
+  function isPlainObject(value) {
+    if (!isObjectLike(value) || objectToString.call(value) != objectTag || isHostObject(value)) {
+      return false;
+    }
+    var proto = getPrototype(value);
+    if (proto === null) {
+      return true;
+    }
+    var Ctor = hasOwnProperty.call(proto, "constructor") && proto.constructor;
+    return typeof Ctor == "function" && Ctor instanceof Ctor && funcToString.call(Ctor) == objectCtorString;
+  }
+  lodash_isplainobject = isPlainObject;
+  return lodash_isplainobject;
+}
+export {
+  requireLodash_isplainobject as r
+};
