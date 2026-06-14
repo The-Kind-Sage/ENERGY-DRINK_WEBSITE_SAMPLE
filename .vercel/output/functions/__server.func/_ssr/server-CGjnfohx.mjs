@@ -81,7 +81,7 @@ function getResponse() {
 }
 var HEADERS = { TSS_SHELL: "X-TSS_SHELL" };
 async function getStartManifest(matchedRoutes) {
-  const { tsrStartManifest } = await import("../_tanstack-start-manifest_v-CGCK1qcy.mjs");
+  const { tsrStartManifest } = await import("../_tanstack-start-manifest_v-Cl6a848g.mjs");
   const startManifest = tsrStartManifest();
   let routes = startManifest.routes;
   routes[rootRouteId];
@@ -103,15 +103,15 @@ async function getStartManifest(matchedRoutes) {
 const manifest = {
   "1245b775bf24ee8c56a9cac01abd48e7ab1823bfd09da223ffdd4c367d28403c": {
     functionName: "adminLoginFn_createServerFn_handler",
-    importer: () => import("./admin.functions-D2Cp7ReR.mjs")
+    importer: () => import("./admin.functions-BeeZI_ll.mjs")
   },
   "bead73de31510191a102739ec4185280dd47f19f28fa39108baa7412046d760a": {
     functionName: "adminSignupFn_createServerFn_handler",
-    importer: () => import("./admin.functions-D2Cp7ReR.mjs")
+    importer: () => import("./admin.functions-BeeZI_ll.mjs")
   },
   "cc80e9ead6bd10e6a9eecb09d34e05260b2eb3ac9ef028e8106bfe979b54c46a": {
     functionName: "adminMeFn_createServerFn_handler",
-    importer: () => import("./admin.functions-D2Cp7ReR.mjs")
+    importer: () => import("./admin.functions-BeeZI_ll.mjs")
   }
 };
 async function getServerFnById(id, access) {
@@ -1351,8 +1351,8 @@ var getBaseManifest = getProdBaseManifest;
 var createEarlyHintsForRequest = createEarlyHintsCollector;
 async function loadEntries() {
   const [routerEntry, startEntry, pluginAdapters] = await Promise.all([
-    import("./router-D5D3mkvu.mjs"),
-    import("./start-DvQYy0Ld.mjs"),
+    import("./router-8TTGAd97.mjs"),
+    import("./start-rfqC27ac.mjs"),
     import("./empty-plugin-adapters-BFgPZ6_d.mjs")
   ]);
   return {

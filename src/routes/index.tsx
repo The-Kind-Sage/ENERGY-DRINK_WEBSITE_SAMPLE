@@ -58,14 +58,26 @@ function Home() {
   const [phase, setPhase] = useState<"hero" | "flying" | "attached">("hero");
   const [flashKey, setFlashKey] = useState(0);
 
+  const [cartCount, setCartCount] = useState(0);
+
   return (
     <main className="relative bg-background text-foreground">
-      <Nav />
-      <Hero heroAnchorRef={heroAnchor} hideCan={phase !== "hero"} />
+      <Nav cartCount={cartCount} />
+      <Hero
+        heroAnchorRef={heroAnchor}
+        hideCan={phase !== "hero"}
+        onShop={() => document.getElementById("flavors")?.scrollIntoView({ behavior: "smooth", block: "start" })}
+        onExploreFlavors={() => document.getElementById("flavors")?.scrollIntoView({ behavior: "smooth", block: "start" })}
+      />
       <Manifesto />
-      <FlavorShowcase flavorAnchorRef={flavorAnchor} attached={phase === "attached"} flashKey={flashKey} />
+      <FlavorShowcase
+        flavorAnchorRef={flavorAnchor}
+        attached={phase === "attached"}
+        flashKey={flashKey}
+        onAddToCart={() => setCartCount((c) => c + 1)}
+      />
       <Ingredients />
-      <Lifestyle />
+      <Lifestyle onJoinMovement={() => document.getElementById("newsletter")?.scrollIntoView({ behavior: "smooth", block: "start" })} />
       <Stats />
       <Newsletter />
       <Footer />
@@ -85,7 +97,7 @@ function Home() {
 }
 
 /* ============ NAV ============ */
-function Nav() {
+function Nav({ cartCount }: { cartCount: number }) {
   const [scrolled, setScrolled] = useState(false);
   useEffect(() => {
     const on = () => setScrolled(window.scrollY > 40);
@@ -102,15 +114,24 @@ function Nav() {
             X<span className="text-primary text-glow-neon">T</span>REAM
           </a>
           <nav className="hidden md:flex items-center gap-8 text-sm uppercase tracking-widest font-medium">
-            {["Shop", "Flavors", "Science", "Community"].map(n => (
+            {["Shop", "Flavors", "Science", "Community"].map((n) => (
               <a key={n} href={`#${n.toLowerCase()}`} className="relative hover:text-primary transition-colors group">
                 {n}
                 <span className="absolute -bottom-1 left-0 h-px w-0 bg-primary transition-all group-hover:w-full" />
               </a>
             ))}
           </nav>
-          <button className="group relative inline-flex items-center gap-2 bg-primary text-primary-foreground px-5 py-2.5 font-bold uppercase tracking-wider text-sm shadow-neon transition-transform hover:scale-105">
-            <ShoppingBag className="h-4 w-4" /> Shop
+          <button
+            onClick={() => document.getElementById("flavors")?.scrollIntoView({ behavior: "smooth", block: "start" })}
+            className="group relative inline-flex items-center gap-2 bg-primary text-primary-foreground px-5 py-2.5 font-bold uppercase tracking-wider text-sm shadow-neon transition-transform hover:scale-105"
+          >
+            <ShoppingBag className="h-4 w-4" />
+            Shop
+            {cartCount > 0 ? (
+              <span className="ml-1 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-primary-foreground/15 px-1 text-[10px] font-mono">
+                {cartCount}
+              </span>
+            ) : null}
           </button>
         </div>
       </header>
@@ -119,9 +140,20 @@ function Nav() {
 }
 
 /* ============ HERO ============ */
-function Hero({ heroAnchorRef, hideCan }: { heroAnchorRef: React.RefObject<HTMLDivElement | null>; hideCan: boolean }) {
+function Hero({
+  heroAnchorRef,
+  hideCan,
+  onShop,
+  onExploreFlavors,
+}: {
+  heroAnchorRef: React.RefObject<HTMLDivElement | null>;
+  hideCan: boolean;
+  onShop: () => void;
+  onExploreFlavors: () => void;
+}) {
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
+
   const yCan = useTransform(scrollYProgress, [0, 1], [0, 200]);
   const rotCan = useTransform(scrollYProgress, [0, 1], [0, 20]);
   const opacityText = useTransform(scrollYProgress, [0, 0.6], [1, 0]);
@@ -193,11 +225,17 @@ function Hero({ heroAnchorRef, hideCan }: { heroAnchorRef: React.RefObject<HTMLD
 
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.2 }}
             className="mt-8 flex flex-wrap items-center gap-4">
-            <button className="group relative overflow-hidden bg-primary text-primary-foreground px-8 py-4 font-bold uppercase tracking-widest text-sm shadow-neon transition-transform hover:scale-[1.03]">
+            <button
+              onClick={onShop}
+              className="group relative overflow-hidden bg-primary text-primary-foreground px-8 py-4 font-bold uppercase tracking-widest text-sm shadow-neon transition-transform hover:scale-[1.03]"
+            >
               <span className="relative z-10 inline-flex items-center gap-2">Shop Now <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" /></span>
               <span className="absolute inset-0 bg-white/20 translate-x-[-100%] group-hover:translate-x-0 transition-transform duration-500" />
             </button>
-            <button className="group inline-flex items-center gap-2 border border-border bg-background/40 backdrop-blur-sm px-8 py-4 font-bold uppercase tracking-widest text-sm transition-colors hover:border-primary hover:text-primary">
+            <button
+              onClick={onExploreFlavors}
+              className="group inline-flex items-center gap-2 border border-border bg-background/40 backdrop-blur-sm px-8 py-4 font-bold uppercase tracking-widest text-sm transition-colors hover:border-primary hover:text-primary"
+            >
               Explore Flavors
             </button>
           </motion.div>
@@ -297,10 +335,12 @@ function FlavorShowcase({
   flavorAnchorRef,
   attached,
   flashKey,
+  onAddToCart,
 }: {
   flavorAnchorRef: React.RefObject<HTMLDivElement | null>;
   attached: boolean;
   flashKey: number;
+  onAddToCart: () => void;
 }) {
   const [active, setActive] = useState(0);
   const f = FLAVORS[active];
@@ -362,7 +402,10 @@ function FlavorShowcase({
                 ))}
               </div>
 
-              <button className="mt-8 inline-flex items-center gap-3 bg-foreground text-background px-7 py-3.5 font-bold uppercase tracking-widest text-sm transition-transform hover:scale-105">
+              <button
+                onClick={onAddToCart}
+                className="mt-8 inline-flex items-center gap-3 bg-foreground text-background px-7 py-3.5 font-bold uppercase tracking-widest text-sm transition-transform hover:scale-105"
+              >
                 <Plus className="h-4 w-4" /> Add to Cart · $3.99
               </button>
             </motion.div>
@@ -449,7 +492,7 @@ function Ingredients() {
 }
 
 /* ============ LIFESTYLE ============ */
-function Lifestyle() {
+function Lifestyle({ onJoinMovement }: { onJoinMovement: () => void }) {
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
   const y = useTransform(scrollYProgress, [0, 1], ["-10%", "10%"]);
@@ -467,7 +510,10 @@ function Lifestyle() {
             Creators. Hustlers.<br/>
             <span className="text-primary text-glow-neon">For anyone who refuses to hit pause.</span>
           </h2>
-          <button className="mt-10 inline-flex items-center gap-2 border border-primary text-primary px-7 py-3.5 font-bold uppercase tracking-widest text-sm hover:bg-primary hover:text-primary-foreground transition-colors">
+          <button
+            onClick={onJoinMovement}
+            className="mt-10 inline-flex items-center gap-2 border border-primary text-primary px-7 py-3.5 font-bold uppercase tracking-widest text-sm hover:bg-primary hover:text-primary-foreground transition-colors"
+          >
             Join The Movement <ArrowRight className="h-4 w-4" />
           </button>
         </div>
@@ -513,7 +559,7 @@ function Stats() {
 function Newsletter() {
   const [email, setEmail] = useState(""); const [sent, setSent] = useState(false);
   return (
-    <section className="relative py-32 px-6 overflow-hidden">
+    <section id="newsletter" className="relative py-32 px-6 overflow-hidden">
       <div className="absolute inset-0 -z-10"
         style={{ background: "radial-gradient(ellipse at center, color-mix(in oklab, var(--neon) 20%, transparent), transparent 60%)" }} />
       <div className="mx-auto max-w-3xl text-center">
@@ -548,7 +594,7 @@ function Footer() {
           <p className="mt-4 max-w-xs text-sm text-muted-foreground">Premium energy. Zero compromise. Built for the relentless.</p>
           <div className="mt-6 flex gap-3">
             {[Instagram, Youtube, Twitter].map((Ic, i) => (
-              <a key={i} href="#" aria-label="social" className="h-10 w-10 grid place-items-center border border-border hover:border-primary hover:text-primary transition-colors">
+              <a key={i} href="/" aria-label="social" className="h-10 w-10 grid place-items-center border border-border hover:border-primary hover:text-primary transition-colors">
                 <Ic className="h-4 w-4" />
               </a>
             ))}
@@ -562,7 +608,11 @@ function Footer() {
           <div key={title as string}>
             <div className="font-mono text-xs uppercase tracking-[0.3em] text-primary mb-4">{title}</div>
             <ul className="space-y-2.5 text-sm text-muted-foreground">
-              {(items as string[]).map(it => <li key={it}><a href="#" className="hover:text-foreground transition-colors">{it}</a></li>)}
+              {(items as string[]).map((it) => (
+                <li key={it}>
+                  <a href="/" className="hover:text-foreground transition-colors">{it}</a>
+                </li>
+              ))}
             </ul>
           </div>
         ))}

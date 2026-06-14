@@ -1,5 +1,5 @@
 import { r as reactExports, j as jsxRuntimeExports } from "../_libs/react.mjs";
-import { S as ShoppingBag, A as ArrowRight, C as ChevronDown, P as Plus, Z as Zap, B as Brain, D as Dumbbell, F as Flame, L as Leaf, a as Atom, I as Instagram, Y as Youtube, T as Twitter } from "../_libs/lucide-react.mjs";
+import { f as ShoppingBag, A as ArrowRight, h as ChevronDown, i as Plus, Z as Zap, B as Brain, D as Dumbbell, j as Flame, k as Leaf, l as Atom, m as Instagram, Y as Youtube, T as Twitter } from "../_libs/lucide-react.mjs";
 import { u as useScroll, a as useTransform, b as useMotionValue, c as useSpring, m as motion } from "../_libs/framer-motion.mjs";
 import "../_libs/motion-dom.mjs";
 import "../_libs/motion-utils.mjs";
@@ -113,13 +113,23 @@ function Home() {
   const flavorAnchor = reactExports.useRef(null);
   const [phase, setPhase] = reactExports.useState("hero");
   const [flashKey, setFlashKey] = reactExports.useState(0);
+  const [cartCount, setCartCount] = reactExports.useState(0);
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("main", { className: "relative bg-background text-foreground", children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsx(Nav, {}),
-    /* @__PURE__ */ jsxRuntimeExports.jsx(Hero, { heroAnchorRef: heroAnchor, hideCan: phase !== "hero" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(Nav, { cartCount }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(Hero, { heroAnchorRef: heroAnchor, hideCan: phase !== "hero", onShop: () => document.getElementById("flavors")?.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    }), onExploreFlavors: () => document.getElementById("flavors")?.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    }) }),
     /* @__PURE__ */ jsxRuntimeExports.jsx(Manifesto, {}),
-    /* @__PURE__ */ jsxRuntimeExports.jsx(FlavorShowcase, { flavorAnchorRef: flavorAnchor, attached: phase === "attached", flashKey }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(FlavorShowcase, { flavorAnchorRef: flavorAnchor, attached: phase === "attached", flashKey, onAddToCart: () => setCartCount((c) => c + 1) }),
     /* @__PURE__ */ jsxRuntimeExports.jsx(Ingredients, {}),
-    /* @__PURE__ */ jsxRuntimeExports.jsx(Lifestyle, {}),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(Lifestyle, { onJoinMovement: () => document.getElementById("newsletter")?.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    }) }),
     /* @__PURE__ */ jsxRuntimeExports.jsx(Stats, {}),
     /* @__PURE__ */ jsxRuntimeExports.jsx(Newsletter, {}),
     /* @__PURE__ */ jsxRuntimeExports.jsx(Footer, {}),
@@ -131,7 +141,9 @@ function Home() {
     } })
   ] });
 }
-function Nav() {
+function Nav({
+  cartCount
+}) {
   const [scrolled, setScrolled] = reactExports.useState(false);
   reactExports.useEffect(() => {
     const on = () => setScrolled(window.scrollY > 40);
@@ -151,16 +163,22 @@ function Nav() {
         n,
         /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "absolute -bottom-1 left-0 h-px w-0 bg-primary transition-all group-hover:w-full" })
       ] }, n)) }),
-      /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { className: "group relative inline-flex items-center gap-2 bg-primary text-primary-foreground px-5 py-2.5 font-bold uppercase tracking-wider text-sm shadow-neon transition-transform hover:scale-105", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { onClick: () => document.getElementById("flavors")?.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      }), className: "group relative inline-flex items-center gap-2 bg-primary text-primary-foreground px-5 py-2.5 font-bold uppercase tracking-wider text-sm shadow-neon transition-transform hover:scale-105", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx(ShoppingBag, { className: "h-4 w-4" }),
-        " Shop"
+        "Shop",
+        cartCount > 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "ml-1 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-primary-foreground/15 px-1 text-[10px] font-mono", children: cartCount }) : null
       ] })
     ] }) })
   ] });
 }
 function Hero({
   heroAnchorRef,
-  hideCan
+  hideCan,
+  onShop,
+  onExploreFlavors
 }) {
   const ref = reactExports.useRef(null);
   const {
@@ -254,14 +272,14 @@ function Hero({
         }, transition: {
           delay: 1.2
         }, className: "mt-8 flex flex-wrap items-center gap-4", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { className: "group relative overflow-hidden bg-primary text-primary-foreground px-8 py-4 font-bold uppercase tracking-widest text-sm shadow-neon transition-transform hover:scale-[1.03]", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { onClick: onShop, className: "group relative overflow-hidden bg-primary text-primary-foreground px-8 py-4 font-bold uppercase tracking-widest text-sm shadow-neon transition-transform hover:scale-[1.03]", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "relative z-10 inline-flex items-center gap-2", children: [
               "Shop Now ",
               /* @__PURE__ */ jsxRuntimeExports.jsx(ArrowRight, { className: "h-4 w-4 transition-transform group-hover:translate-x-1" })
             ] }),
             /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "absolute inset-0 bg-white/20 translate-x-[-100%] group-hover:translate-x-0 transition-transform duration-500" })
           ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("button", { className: "group inline-flex items-center gap-2 border border-border bg-background/40 backdrop-blur-sm px-8 py-4 font-bold uppercase tracking-widest text-sm transition-colors hover:border-primary hover:text-primary", children: "Explore Flavors" })
+          /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: onExploreFlavors, className: "group inline-flex items-center gap-2 border border-border bg-background/40 backdrop-blur-sm px-8 py-4 font-bold uppercase tracking-widest text-sm transition-colors hover:border-primary hover:text-primary", children: "Explore Flavors" })
         ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsx(motion.div, { initial: {
           opacity: 0
@@ -353,7 +371,8 @@ function Manifesto() {
 function FlavorShowcase({
   flavorAnchorRef,
   attached,
-  flashKey
+  flashKey,
+  onAddToCart
 }) {
   const [active, setActive] = reactExports.useState(0);
   const f = FLAVORS[active];
@@ -419,7 +438,7 @@ function FlavorShowcase({
             }, children: v }),
             /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-[10px] uppercase tracking-widest text-muted-foreground mt-1", children: l })
           ] }, l)) }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { className: "mt-8 inline-flex items-center gap-3 bg-foreground text-background px-7 py-3.5 font-bold uppercase tracking-widest text-sm transition-transform hover:scale-105", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { onClick: onAddToCart, className: "mt-8 inline-flex items-center gap-3 bg-foreground text-background px-7 py-3.5 font-bold uppercase tracking-widest text-sm transition-transform hover:scale-105", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx(Plus, { className: "h-4 w-4" }),
             " Add to Cart · $3.99"
           ] })
@@ -508,7 +527,9 @@ function Ingredients() {
     ] }, ing.label)) })
   ] }) });
 }
-function Lifestyle() {
+function Lifestyle({
+  onJoinMovement
+}) {
   const ref = reactExports.useRef(null);
   const {
     scrollYProgress
@@ -532,7 +553,7 @@ function Lifestyle() {
         /* @__PURE__ */ jsxRuntimeExports.jsx("br", {}),
         /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-primary text-glow-neon", children: "For anyone who refuses to hit pause." })
       ] }),
-      /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { className: "mt-10 inline-flex items-center gap-2 border border-primary text-primary px-7 py-3.5 font-bold uppercase tracking-widest text-sm hover:bg-primary hover:text-primary-foreground transition-colors", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { onClick: onJoinMovement, className: "mt-10 inline-flex items-center gap-2 border border-primary text-primary px-7 py-3.5 font-bold uppercase tracking-widest text-sm hover:bg-primary hover:text-primary-foreground transition-colors", children: [
         "Join The Movement ",
         /* @__PURE__ */ jsxRuntimeExports.jsx(ArrowRight, { className: "h-4 w-4" })
       ] })
@@ -567,7 +588,7 @@ function Stats() {
 function Newsletter() {
   const [email, setEmail] = reactExports.useState("");
   const [sent, setSent] = reactExports.useState(false);
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { className: "relative py-32 px-6 overflow-hidden", children: [
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { id: "newsletter", className: "relative py-32 px-6 overflow-hidden", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "absolute inset-0 -z-10", style: {
       background: "radial-gradient(ellipse at center, color-mix(in oklab, var(--neon) 20%, transparent), transparent 60%)"
     } }),
@@ -599,11 +620,11 @@ function Footer() {
           "REAM"
         ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-4 max-w-xs text-sm text-muted-foreground", children: "Premium energy. Zero compromise. Built for the relentless." }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "mt-6 flex gap-3", children: [Instagram, Youtube, Twitter].map((Ic, i) => /* @__PURE__ */ jsxRuntimeExports.jsx("a", { href: "#", "aria-label": "social", className: "h-10 w-10 grid place-items-center border border-border hover:border-primary hover:text-primary transition-colors", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Ic, { className: "h-4 w-4" }) }, i)) })
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "mt-6 flex gap-3", children: [Instagram, Youtube, Twitter].map((Ic, i) => /* @__PURE__ */ jsxRuntimeExports.jsx("a", { href: "/", "aria-label": "social", className: "h-10 w-10 grid place-items-center border border-border hover:border-primary hover:text-primary transition-colors", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Ic, { className: "h-4 w-4" }) }, i)) })
       ] }),
       [["Shop", ["All Flavors", "Bundles", "Merch", "Subscribe"]], ["Company", ["About", "Careers", "Press", "Contact"]], ["Support", ["FAQ", "Shipping", "Returns", "Wholesale"]]].map(([title, items]) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "font-mono text-xs uppercase tracking-[0.3em] text-primary mb-4", children: title }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("ul", { className: "space-y-2.5 text-sm text-muted-foreground", children: items.map((it) => /* @__PURE__ */ jsxRuntimeExports.jsx("li", { children: /* @__PURE__ */ jsxRuntimeExports.jsx("a", { href: "#", className: "hover:text-foreground transition-colors", children: it }) }, it)) })
+        /* @__PURE__ */ jsxRuntimeExports.jsx("ul", { className: "space-y-2.5 text-sm text-muted-foreground", children: items.map((it) => /* @__PURE__ */ jsxRuntimeExports.jsx("li", { children: /* @__PURE__ */ jsxRuntimeExports.jsx("a", { href: "/", className: "hover:text-foreground transition-colors", children: it }) }, it)) })
       ] }, title))
     ] }),
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mx-auto max-w-7xl flex flex-col md:flex-row justify-between items-center gap-4 pt-8 border-t border-border", children: [
