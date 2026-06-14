@@ -77,52 +77,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 });
 
 function RootShell({ children }: { children: ReactNode }) {
-  // Inline script runs as soon as the HTML is parsed (before React hydration)
-  const disableDevtoolsInlineScript = `
-    (function () {
-      try {
-        if (typeof document === "undefined" || typeof window === "undefined") return;
-        if (window.__disableDevtoolsInstalled) return;
-        window.__disableDevtoolsInstalled = true;
-
-        document.addEventListener("contextmenu", function (event) {
-          event.preventDefault();
-        }, true);
-
-        window.addEventListener("keydown", function (event) {
-          var e = event;
-          var key = e && typeof e.key === "string" ? e.key : "";
-          if (key === "F12") { e.preventDefault(); return; }
-
-          var k = key.length === 1 ? key.toLowerCase() : String(key).toLowerCase();
-          var isCtrlOrMeta = !!(e.ctrlKey || e.metaKey);
-          var isShift = !!e.shiftKey;
-          var isOptionAlt = !!e.altKey;
-
-          // Ctrl+Shift+I / Cmd+Option+I
-          if (k === "i" && isShift && (e.ctrlKey || (e.metaKey && isOptionAlt))) { e.preventDefault(); return; }
-          // Ctrl+Shift+J / Cmd+Option+J
-          if (k === "j" && isShift && (e.ctrlKey || (e.metaKey && isOptionAlt))) { e.preventDefault(); return; }
-          // Ctrl+U / Cmd+Option+U
-          if (k === "u" && !isShift && ((e.ctrlKey && !e.altKey) || (e.metaKey && isOptionAlt))) { e.preventDefault(); return; }
-
-          // Extra coverage: meta+alt+I/J/U
-          if (k === "u" && !isShift && (e.metaKey && e.altKey)) { e.preventDefault(); return; }
-          if (k === "i" && !isShift && (e.metaKey && e.altKey)) { e.preventDefault(); return; }
-          if (k === "j" && !isShift && (e.metaKey && e.altKey)) { e.preventDefault(); return; }
-        }, true);
-      } catch (err) { /* silently ignore */ }
-    })();
-  `.trim();
-
   return (
     <html lang="en">
       <head><HeadContent /></head>
-      <body>
-        <script dangerouslySetInnerHTML={{ __html: disableDevtoolsInlineScript }} />
-        {children}
-        <Scripts />
-      </body>
+      <body>{children}<Scripts /></body>
     </html>
   );
 }
